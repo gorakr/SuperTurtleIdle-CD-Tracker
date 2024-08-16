@@ -1,7 +1,7 @@
 ## HOW TO USE:
-Install a UserScript manager extension such as TamperMonkey and set to run on page visit 
-[Chrome Ext](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-[Firefox Ext](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+Install a UserScript manager extension such as TamperMonkey and set to run on page visit  
+[Chrome Ext](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
+[Firefox Ext](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)  
 
 The first value for a timer can be set to 1 or 0 on the cd_timers object to enable or disable individual timers you want to see
 
