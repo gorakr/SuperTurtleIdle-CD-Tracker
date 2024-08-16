@@ -4,6 +4,7 @@
 // @description  Togglable cooldown tracker for Jester, Mystery Present, gift for petting turtle, gift for exporting, item of the day restock, and dungeons)
 // @match        https://superturtleidle.github.io/
 // @grant        none
+// @updateURL    https://raw.githubusercontent.com/gorakr/SuperTurtleIdle-CD-Tracker/main/timers.js
 // @downloadURL  https://raw.githubusercontent.com/gorakr/SuperTurtleIdle-CD-Tracker/main/timers.js
 // ==/UserScript==
 //
