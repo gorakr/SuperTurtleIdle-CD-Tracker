@@ -20,15 +20,15 @@
 (function() {
     'use strict';
     let cd_timers = {"cdt_jester":[true,'/img/sys/jesterturtle.png','jesterCooldown',cd],
-                       "cdt_mystery":[1,'/img/src/enemies/E15M.png','presentCanSpawn',cd],
-                       "cdt_gilded":[1,'/img/src/mejoras/bu3.png','gildedCooldown',cd],
-                       "cdt_water":[1,'img/src/garden/g2.png'],
-                       "cdt_turtlepet":[1,'/img/src/items/I119.jpg','presentCooldown',cd],
-                       "cdt_export":[1,'/img/src/items/I296.jpg','exportReminder',cd],
-                       "cdt_iotd":[1,'/img/src/items/I218.jpg','itemOfTheDay',cd],
-                       "cdt_dungeon1":[1,'/img/src/enemies/E22M.png','A5.dungeonTimer',areas,'A5.charges',areas],
-                       "cdt_dungeon2":[1,'/img/src/enemies/E24M.png','A6.dungeonTimer',areas,'A6.charges',areas],
-                       "cdt_dungeon3":[1,'/img/src/enemies/E47M.png','A10.dungeonTimer',areas,'A10.charges',areas]
+                     "cdt_mystery":[1,'/img/src/enemies/E15M.png','presentCanSpawn',cd],
+                     "cdt_gilded":[1,'/img/src/mejoras/bu3.png','gildedCooldown',cd],
+                     "cdt_water":[1,'img/src/garden/g2.png'],
+                     "cdt_turtlepet":[1,'/img/src/items/I119.jpg','presentCooldown',cd],
+                     "cdt_export":[1,'/img/src/items/I296.jpg','exportReminder',cd],
+                     "cdt_iotd":[1,'/img/src/items/I218.jpg','itemOfTheDay',cd],
+                     "cdt_dungeon1":[1,'/img/src/enemies/E22M.png','A5.dungeonTimer',areas,'A5.charges',areas],
+                     "cdt_dungeon2":[1,'/img/src/enemies/E24M.png','A6.dungeonTimer',areas,'A6.charges',areas],
+                     "cdt_dungeon3":[1,'/img/src/enemies/E47M.png','A10.dungeonTimer',areas,'A10.charges',areas]
                      // formatting "id" (string:[enable/disable (bool),"background image url" (string),timerProp (string),timerObject (obj),chargeProp (string), chargeObject (obj)],
                     }
     let cd_sweep_max = {};
@@ -113,8 +113,8 @@
     if(unlocks.present == false && cd_timers.cdt_turtlepet[0]){did('cdt_turtlepet').style = "display:none";}
     if(unlocks.garden == false && cd_timers.cdt_water[0]){did('cdt_water').style = "display:none"}
 
-    for (let [key, value] of Object.entries(cd_timers)) {
-        window.setInterval(function(){
+    window.setInterval(function(){
+        for (let [key, value] of Object.entries(cd_timers)) {
             // update default cooldown sweep
             if(value[0] && key != "cdt_water") {
                 let cur_time = objResolver(value[2],value[3])
@@ -125,24 +125,18 @@
                     cd_sweep_max[key][1] = cur_time
                 };
                 cd_sweep_max[key][0] = cur_time;
-                if (key == 'cdt_jester') {
-                }
-                let cd_per = (isNaN(cd_sweep_max[key][0] / cd_sweep_max[key][1]) * 100 ? 0 : cd_sweep_max[key][0] / cd_sweep_max[key][1] * 100);
+                let cd_per = cd_sweep_max[key][0] / cd_sweep_max[key][1] * 100;
+                if (isNaN(cd_sweep_max[key][0]) || cur_time <0){ cd_per = 0};
                 did(key + "_sweep").style.height = cd_per + '%'
             };
-        },1000);
-        // default timers
-        if(value[0] && (cd_timers[key].length == 4)) {
-            window.setInterval(function(){
+            // default timers
+            if(value[0] && (cd_timers[key].length == 4)) {
                 if(objResolver(value[2],value[3]) > 0){
-                   //if (key == 'cdt_jester'){console.log(`${objResolver(value[2],value[3])} : ${typeof(objResolver(value[2],value[3]))}`)}
-                   did(key + "_overlay").innerText = `${formatTime(objResolver(value[2],value[3]))}`
+                    did(key + "_overlay").innerText = `${formatTime(objResolver(value[2],value[3]))}`
                 }else{
                 }
-            },1000);
-        // dungeons with charges
-        }else if(value[0] && (cd_timers[key].length == 6)) {
-            window.setInterval(function(){
+                // dungeons with charges
+            }else if(value[0] && (cd_timers[key].length == 6)) {
                 if(objResolver(value[2],value[3]) > 0 && (objResolver(value[4],value[5]) != 3)){
                     did(key+"_overlay").innerText = `${formatTime(objResolver(value[2],value[3]))}`
                 }else{
@@ -165,51 +159,46 @@
                         did(key + '_overlay').style.boxShadow = '#68febea0  2px  2px 0px inset,#68febea0 -2px -2px 0px inset,#68febea0  -2px  2px 0px inset,#68febea0 2px -2px 0px inset';
                         did(key + '_sweep').style.visibity = 'hidden';
                         break;
-                    default: did(key + '_base').style.boxShadow = 'black  2px  2px 0px inset,black -2px -2px 0px inset'; 
+                    default: did(key + '_base').style.boxShadow = 'black  2px  2px 0px inset,black -2px -2px 0px inset';
                 }
-            },1000);
-        }else{
-            //console.log(`CD Tracker: Unexpected Error parsing key:${key}`)
-        }
-    };
-    //garden water timer
+            }else{
+            }
+        };
+        //garden water timer
         if((cdt_plotsUnlocked > 0) && (cd_timers['cdt_water'][0])) {
-            window.setInterval(function(){
-                let i = 0;
-                let l = [];
-                let a = [];
-                for (let [key,value] of Object.entries(plot)) {
-                    i++
-                    if (i > cdt_plotsUnlocked) {break};
-                    if (value.age > 0) {l.push(value.water)}
-                    if (value.slot == "none") {a.push(key)}
-                };
-                if (rpgPlayer.currentFertiliser != "none") {
-                    did('cdt_water_base').src = `/img/src/garden/${rpgPlayer.currentFertiliser}.jpg`;
-                }
-                if (a.length == cdt_plotsUnlocked) {
-                    did('cdt_water_overlay').style.boxShadow = "#fc4ab9a0  2px  2px 0px inset,#fc4ab9a0 -2px -2px 0px inset";
-                    did('cdt_water_overlay').style.background = "#fc4ab933";
-                    did('cdt_water_overlay').style.fontSize = "0";
-                } else if(a.length > 0) {
-                    did('cdt_water_overlay').style.boxShadow ='#efca08a0  2px  2px 0px inset,#efca08a0 -2px -2px 0px inset';
-                    did('cdt_water_overlay').style.background = "";
-                    did('cdt_water_overlay').style.fontSize = "";
-                } else {
-                    did('cdt_water_overlay').style.boxShadow = 'black  2px  2px 0px inset,black -2px -2px 0px inset';
-                    did('cdt_water_overlay').style.background = "";
-                    did('cdt_water_overlay').style.fontSize = "";
-                };
-                let w = (Math.min(...l))
-                let w_per = (w <= 0 ? 0 : w == 'Infinity' ? 100 : w)
-                did('cdt_water_overlay').innerText = w_per
-                did('cdt_water_sweep').style.height = (w_per / 100) * 100 + '%'
-            },1000);
+            let i = 0;
+            let l = [];
+            let a = [];
+            for (let [key,value] of Object.entries(plot)) {
+                i++
+                if (i > cdt_plotsUnlocked) {break};
+                if (value.age > 0) {l.push(value.water)}
+                if (value.slot == "none") {a.push(key)}
+            };
+            if (rpgPlayer.currentFertiliser != "none") {
+                did('cdt_water_base').src = `/img/src/garden/${rpgPlayer.currentFertiliser}.jpg`;
+            }
+            if (a.length == cdt_plotsUnlocked) {
+                did('cdt_water_overlay').style.boxShadow = "#fc4ab9a0  2px  2px 0px inset,#fc4ab9a0 -2px -2px 0px inset";
+                did('cdt_water_overlay').style.background = "#fc4ab933";
+                did('cdt_water_overlay').style.fontSize = "0";
+            } else if(a.length > 0) {
+                did('cdt_water_overlay').style.boxShadow ='#efca08a0  2px  2px 0px inset,#efca08a0 -2px -2px 0px inset';
+                did('cdt_water_overlay').style.background = "";
+                did('cdt_water_overlay').style.fontSize = "";
+            } else {
+                did('cdt_water_overlay').style.boxShadow = 'black  2px  2px 0px inset,black -2px -2px 0px inset';
+                did('cdt_water_overlay').style.background = "";
+                did('cdt_water_overlay').style.fontSize = "";
+            };
+            let w = (Math.min(...l))
+            let w_per = (w <= 0 ? 0 : w == 'Infinity' ? 100 : w)
+            did('cdt_water_overlay').innerText = w_per
+            did('cdt_water_sweep').style.height = (w_per / 100) * 100 + '%'
         }
 
-    // IOTD Item Icon, border for sold
-    if(cd_timers.cdt_iotd[0]){
-        window.setInterval(function(){
+        // IOTD Item Icon, border for sold
+        if(cd_timers.cdt_iotd[0]){
             if (itemOfTheDay.bought == false) {
                 did('cdt_iotd_base').src = `/img/src/items/${itemOfTheDay.item}.jpg`;
                 did('cdt_iotd_sweep').style.background = "#0000";
@@ -217,7 +206,6 @@
                 did('cdt_iotd_base').src = cd_timers.cdt_iotd[1];
                 did('cdt_iotd_sweep').style.background = "";
             }
-
-        },1000)
-     };
+        };
+    },1000);
 })();
