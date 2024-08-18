@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SuperTurtleIdle CD Tracker
-// @version      0.44.4
+// @version      0.45.1
 // @description  Togglable cooldown tracker for Jester, Mystery Present, gift for petting turtle, gift for exporting, item of the day restock, and dungeons)
 // @match        https://superturtleidle.github.io/
 // @grant        none
@@ -167,6 +167,16 @@
             }else{
             }
         };
+        //random event toggle border
+        ['cdt_mystery','cdt_gilded'].forEach(element => {
+            if(cd_timers[element][0]) {
+                if(settings.randomEventToggle == true ) {
+                    did(element + '_overlay').style.boxShadow = "#fc4ab9a0  2px  2px 0px inset,#fc4ab9a0 -2px -2px 0px inset";
+                } else {
+                    did(element + '_overlay').style.boxShadow = "";
+                }
+            }
+        });
         //garden water timer
         if((cdt_plotsUnlocked > 0) && (cd_timers['cdt_water'][0])) {
             let i = 0;
@@ -225,7 +235,7 @@
             did('cdt_research').style = ""
             did('cdt_research_base').src = reas_short.img;
             did('cdt_research_sweep').style.height = reas_short.timer / reas_short.timerMax * 100
-            did('cdt_research_overlay').innerText = (reas_short.timer == 0 ? "" : formatTime(reas_short.timer))
+            did('cdt_research_overlay').innerText = (reas_short.timer <= 0 ? "" : formatTime(reas_short.timer))
         }
     },1000);
 
